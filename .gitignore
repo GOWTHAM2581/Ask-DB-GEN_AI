@@ -1,0 +1,30 @@
+# Node.js
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.env
+
+# Environment
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
