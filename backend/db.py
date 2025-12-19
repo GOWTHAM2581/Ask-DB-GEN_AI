@@ -1,6 +1,12 @@
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.exc import SQLAlchemyError
 from pydantic import BaseModel
+from typing import Optional
+import mysql.connector
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class DBConnection(BaseModel):
     host: str
@@ -8,9 +14,34 @@ class DBConnection(BaseModel):
     user: str
     password: str
     database: str
+    ssl_mode: Optional[str] = "REQUIRED"
 
 def get_db_url(creds: DBConnection) -> str:
-    return f"mysql+pymysql://{creds.user}:{creds.password}@{creds.host}:{creds.port}/{creds.database}"
+    url = f"mysql+pymysql://{creds.user}:{creds.password}@{creds.host}:{creds.port}/{creds.database}"
+    if creds.ssl_mode == "REQUIRED":
+        # For Aiven and similar, we often need to append SSL params
+        url += "?ssl_ca=ca.pem" if os.path.exists("ca.pem") else ""
+    return url
+
+def get_direct_mysql_connection():
+    """
+    Returns a raw mysql-connector connection using environment variables.
+    As requested by the user.
+    """
+    try:
+        conn = mysql.connector.connect(
+            host=os.getenv("DB_HOST"),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD"),
+            database=os.getenv("DB_NAME"),
+            port=int(os.getenv("DB_PORT", 3306)),
+            ssl_ca="ca.pem" if os.path.exists("backend/ca.pem") or os.path.exists("ca.pem") else None,
+            ssl_verify_cert=True if os.path.exists("ca.pem") else False
+        )
+        return conn
+    except Exception as e:
+        print(f"Error connecting to MySQL: {e}")
+        return None
 
 def get_engine_for_creds(creds: DBConnection):
     try:

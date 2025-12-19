@@ -13,3 +13,4 @@ cryptography==42.0.2
 python-dotenv==1.0.1
 aiofiles==23.2.1
 requests==2.31.0
+mysql-connector-python==8.0.33

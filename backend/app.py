@@ -1,4 +1,8 @@
 import time
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -90,6 +94,33 @@ async def connect_database(creds: ConnectRequest, current_user: str = Depends(ge
         return {"status": "connected", "db_token": db_token}
     except Exception as e:
         app_logger.error(f"Connection failed for user {current_user}: {str(e)}")
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/db/connect_env")
+async def connect_env_database(current_user: str = Depends(get_current_user)):
+    """
+    Connects using the default environment variables (Aiven MySQL).
+    """
+    try:
+        creds_dict = {
+            "host": os.getenv("DB_HOST"),
+            "port": int(os.getenv("DB_PORT", 17162)),
+            "user": os.getenv("DB_USER"),
+            "password": os.getenv("DB_PASSWORD"),
+            "database": os.getenv("DB_NAME")
+        }
+        if not all(creds_dict.values()):
+             raise ValueError("DB environment variables are not fully configured.")
+             
+        db_creds = DBConnection(**creds_dict)
+        test_connection(db_creds)
+        
+        # Encrypt credentials to return to client
+        db_token = encrypt_data(creds_dict)
+        
+        return {"status": "connected", "db_token": db_token}
+    except Exception as e:
+        app_logger.error(f"Env connection failed: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/query/ask", response_model=QueryResponse)
