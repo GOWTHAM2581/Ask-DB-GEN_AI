@@ -10,7 +10,13 @@ from pydantic import BaseModel
 
 load_dotenv()
 
-SECRET_KEY = os.getenv("SECRET_KEY", "fallback_secret_key_for_dev_only")
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    print("WARNING: SECRET_KEY not found in environment, using fallback dev key.")
+    SECRET_KEY = "fallback_secret_key_for_dev_only"
+else:
+    print(f"INFO: SECRET_KEY loaded from environment (Starts with: {SECRET_KEY[:3]}...)")
+
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
 
