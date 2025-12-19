@@ -29,6 +29,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+async def root():
+    return {"status": "online", "message": "SQL AI API is running"}
+
 # --- Models ---
 
 class LoginRequest(BaseModel):
@@ -59,9 +63,10 @@ async def login(form_data: LoginRequest):
     # Mock user database
     # In a real app, verify against DB
     if form_data.username == "admin" and form_data.password == "admin":
-        access_token_expires = 30 # minutes
+        access_token_expires = timedelta(minutes=30)
         access_token = create_access_token(
-            data={"sub": form_data.username}
+            data={"sub": form_data.username},
+            expires_delta=access_token_expires
         )
         return {"access_token": access_token, "token_type": "bearer"}
     
