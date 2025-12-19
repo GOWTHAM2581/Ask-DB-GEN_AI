@@ -16,11 +16,21 @@ class DBConnection(BaseModel):
     database: str
     ssl_mode: Optional[str] = "REQUIRED"
 
+def init_ssl_ca():
+    """Ensures ca.pem exists if provided via env var"""
+    ca_content = os.getenv("DB_SSL_CA_CONTENT")
+    if ca_content and not os.path.exists("ca.pem"):
+        with open("ca.pem", "w") as f:
+            f.write(ca_content)
+        return "ca.pem"
+    return "ca.pem" if os.path.exists("ca.pem") else None
+
 def get_db_url(creds: DBConnection) -> str:
     url = f"mysql+pymysql://{creds.user}:{creds.password}@{creds.host}:{creds.port}/{creds.database}"
     if creds.ssl_mode == "REQUIRED":
-        # For Aiven and similar, we often need to append SSL params
-        url += "?ssl_ca=ca.pem" if os.path.exists("ca.pem") else ""
+        ca_path = init_ssl_ca()
+        if ca_path:
+            url += f"?ssl_ca={ca_path}"
     return url
 
 def get_direct_mysql_connection():
@@ -29,14 +39,15 @@ def get_direct_mysql_connection():
     As requested by the user.
     """
     try:
+        ca_path = init_ssl_ca()
         conn = mysql.connector.connect(
             host=os.getenv("DB_HOST"),
             user=os.getenv("DB_USER"),
             password=os.getenv("DB_PASSWORD"),
             database=os.getenv("DB_NAME"),
             port=int(os.getenv("DB_PORT", 3306)),
-            ssl_ca="ca.pem" if os.path.exists("backend/ca.pem") or os.path.exists("ca.pem") else None,
-            ssl_verify_cert=True if os.path.exists("ca.pem") else False
+            ssl_ca=ca_path,
+            ssl_verify_cert=True if ca_path else False
         )
         return conn
     except Exception as e:
