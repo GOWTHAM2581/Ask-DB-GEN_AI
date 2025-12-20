@@ -7,11 +7,11 @@ import { motion } from 'framer-motion';
 
 const ConnectDB = () => {
     const [formData, setFormData] = useState({
-        host: 'mysql-36e55b8c-gowtham2581h-2c75.k.aivencloud.com',
-        port: 17162,
-        user: 'avnadmin',
-        password: 'AVNS_Yoo9PV8qlwTBqHBdpjh',
-        database: 'defaultdb'
+        host: import.meta.env.VITE_DB_HOST || '',
+        port: import.meta.env.VITE_DB_PORT || 3306,
+        user: import.meta.env.VITE_DB_USER || '',
+        password: import.meta.env.VITE_DB_PASSWORD || '',
+        database: import.meta.env.VITE_DB_NAME || ''
     });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
