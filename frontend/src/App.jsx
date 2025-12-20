@@ -6,6 +6,7 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import ConnectDB from './pages/ConnectDB';
 import Query from './pages/Query';
+import NotFound from './pages/NotFound';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -53,6 +54,9 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
+
+                        {/* 404 Route */}
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
                 </Layout>
             </AuthProvider>
