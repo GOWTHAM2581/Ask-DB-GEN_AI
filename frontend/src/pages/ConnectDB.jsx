@@ -7,11 +7,11 @@ import { motion } from 'framer-motion';
 
 const ConnectDB = () => {
     const [formData, setFormData] = useState({
-        host: 'localhost',
-        port: 3306,
-        user: 'root',
-        password: '',
-        database: ''
+        host: 'mysql-36e55b8c-gowtham2581h-2c75.k.aivencloud.com',
+        port: 17162,
+        user: 'avnadmin',
+        password: 'AVNS_Yoo9PV8qlwTBqHBdpjh',
+        database: 'defaultdb'
     });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
