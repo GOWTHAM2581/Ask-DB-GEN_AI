@@ -91,12 +91,17 @@ async def connect_database(creds: ConnectRequest, current_user: str = Depends(ge
     Validates connection and returns an encrypted token containing the credentials.
     """
     try:
-        # Validate connection
-        db_creds = DBConnection(**creds.model_dump())
+        # Strip whitespace from credentials to prevent DNS/Auth errors
+        data = creds.model_dump()
+        for key in ["host", "user", "password", "database"]:
+            if isinstance(data[key], str):
+                data[key] = data[key].strip()
+        
+        db_creds = DBConnection(**data)
         test_connection(db_creds)
         
         # Encrypt credentials to return to client (Stateless)
-        db_token = encrypt_data(creds.model_dump())
+        db_token = encrypt_data(data)
         
         return {"status": "connected", "db_token": db_token}
     except Exception as e:

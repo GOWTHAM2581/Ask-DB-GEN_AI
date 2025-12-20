@@ -28,7 +28,14 @@ const ConnectDB = () => {
         setError('');
 
         try {
-            const data = await connectDB(formData);
+            const sanitizedData = {
+                ...formData,
+                host: formData.host.trim(),
+                user: formData.user.trim(),
+                password: formData.password.trim(),
+                database: formData.database.trim()
+            };
+            const data = await connectDB(sanitizedData);
             saveDbSession(data.db_token);
             navigate('/query');
         } catch (err) {

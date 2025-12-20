@@ -28,9 +28,10 @@ def init_ssl_ca():
 from urllib.parse import quote_plus
 
 def get_db_url(creds: DBConnection) -> str:
-    user = quote_plus(creds.user)
-    password = quote_plus(creds.password)
-    url = f"mysql+pymysql://{user}:{password}@{creds.host}:{creds.port}/{creds.database}"
+    user = quote_plus(creds.user.strip())
+    password = quote_plus(creds.password.strip())
+    host = creds.host.strip()
+    url = f"mysql+pymysql://{user}:{password}@{host}:{creds.port}/{creds.database.strip()}"
     if creds.ssl_mode == "REQUIRED":
         ca_path = init_ssl_ca()
         if ca_path:
