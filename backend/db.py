@@ -25,8 +25,12 @@ def init_ssl_ca():
         return "ca.pem"
     return "ca.pem" if os.path.exists("ca.pem") else None
 
+from urllib.parse import quote_plus
+
 def get_db_url(creds: DBConnection) -> str:
-    url = f"mysql+pymysql://{creds.user}:{creds.password}@{creds.host}:{creds.port}/{creds.database}"
+    user = quote_plus(creds.user)
+    password = quote_plus(creds.password)
+    url = f"mysql+pymysql://{user}:{password}@{creds.host}:{creds.port}/{creds.database}"
     if creds.ssl_mode == "REQUIRED":
         ca_path = init_ssl_ca()
         if ca_path:

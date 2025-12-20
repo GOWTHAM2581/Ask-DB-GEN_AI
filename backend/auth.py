@@ -8,14 +8,17 @@ import os
 from dotenv import load_dotenv
 from pydantic import BaseModel
 
-load_dotenv()
+# Load .env relative to this file's location
+base_dir = os.path.dirname(os.path.abspath(__file__))
+env_path = os.path.join(base_dir, ".env")
+load_dotenv(env_path)
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:
-    print("WARNING: SECRET_KEY not found in environment, using fallback dev key.")
+    print(f"WARNING: SECRET_KEY not found in {env_path}, using fallback dev key.")
     SECRET_KEY = "fallback_secret_key_for_dev_only"
 else:
-    print(f"INFO: SECRET_KEY loaded from environment (Starts with: {SECRET_KEY[:3]}...)")
+    print(f"INFO: SECRET_KEY loaded from {env_path}")
 
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
@@ -59,6 +62,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
             raise credentials_exception
         token_data = TokenData(username=username)
     except JWTError as e:
-        print(f"JWT Validation Error: {str(e)}") # This will show in Render logs
+        print(f"JWT Validation Error: {type(e).__name__} - {str(e)}") # This will show in terminal
         raise credentials_exception
     return token_data.username

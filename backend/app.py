@@ -1,5 +1,7 @@
 import time
 import os
+from datetime import timedelta
+from urllib.parse import quote_plus
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -90,11 +92,11 @@ async def connect_database(creds: ConnectRequest, current_user: str = Depends(ge
     """
     try:
         # Validate connection
-        db_creds = DBConnection(**creds.dict())
+        db_creds = DBConnection(**creds.model_dump())
         test_connection(db_creds)
         
         # Encrypt credentials to return to client (Stateless)
-        db_token = encrypt_data(creds.dict())
+        db_token = encrypt_data(creds.model_dump())
         
         return {"status": "connected", "db_token": db_token}
     except Exception as e:
