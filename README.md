@@ -1,155 +1,87 @@
-# 🧠 ask-your-db
+# AskDB: AI-Powered SQL Query Framework 🚀
 
-**Full-Stack AI SQL Query Framework**
+### **Live Production URL: [https://ask-your-db-gen-ai.vercel.app/](https://ask-your-db-gen-ai.vercel.app/)**
 
-ask-your-db is a **production-ready, security-first AI web application** that allows users to query their **own MySQL databases using natural language**.  
-It safely converts English questions into **validated, read-only SQL queries** and executes them with strict guardrails.
-
-> Built for real systems. Not demos. Not unsafe AI shortcuts.
+AskDB is a premium, full-stack AI platform that allows anyone to talk to their database using plain English. It eliminates the need for complex SQL knowledge by translating natural language into optimized database queries in real-time.
 
 ---
 
-## ✨ Overview
+## ✨ Features So Far
 
-ask-your-db enables users to explore databases without writing SQL manually.  
-It combines a **schema-aware LLM**, **strict SQL validation**, and a **modern React UI** to deliver safe and predictable AI-powered database querying.
-
-This project is designed with **enterprise-grade architecture principles**, making it suitable for production environments.
-
----
-
-## 🧱 Stack
-
-- 🤖 **AI Guardrails** – Schema-restricted LLM SQL generation  
-- 🔐 **Security** – JWT authentication, SQL validation, rate limiting  
-- 🗄️ **Database** – MySQL (read-only) via SQLAlchemy  
-- ⚙️ **Backend** – FastAPI (modular, production-ready)  
-- 🎨 **Frontend** – React + Tailwind (modern, Apple-style UI)  
+- **Natural Language to SQL**: Powered by Groq/LLama AI to generate accurate MySQL queries from English prompts.
+- **Dynamic Table Visualization**: Instantly view results in a clean, modern data table with auto-formatted columns.
+- **Bring Your Own Database (BYODB)**: Stateless connection architecture allowing users to connect any public MySQL database securely.
+- **Premium Design System**: A sleek, dark-themed UI featuring Glassmorphism, tailored gradients, and high-end micro-animations.
+- **Modern AI Loading State**: A custom "AI Thinking" pulse animation that scans schema while processing queries.
+- **Security First**: 
+  - JWT-based User Authentication.
+  - End-to-End encrypted database session tokens (credentials never stored on the server).
+  - Aiven SSL support for encrypted database transport.
+- **Custom 404 Experience**: A beautiful, animated "Look like you're lost" experience using framed motion.
 
 ---
 
-## 🧩 Core Components
+## 🛠️ Technology Stack
 
-- **AI SQL Generator**  
-  Converts natural language into SQL using real database schema only
-
-- **Schema Inspector**  
-  Reads actual tables and columns using `SHOW TABLES` and `DESCRIBE`
-
-- **SQL Validator**  
-  Enforces SELECT-only queries and blocks unsafe keywords
-
-- **Explain-Before-Execute Engine**  
-  Runs `EXPLAIN` before executing SQL
-
-- **Authentication Layer**  
-  JWT-based secure access
-
-- **Rate Limiter**  
-  Prevents abuse and excessive querying
+| Layer | Technology Used |
+| :--- | :--- |
+| **Frontend** | React 18, Vite, TailwindCSS, Framer Motion |
+| **Backend** | FastAPI (Python 3.10+), Uvicorn |
+| **AI/LLM** | Groq API (LLama 3.1 70B) |
+| **Database** | MySQL (Optimized for Aiven Cloud) |
+| **ORM/Driver** | SQLAlchemy, PyMySQL |
+| **Icons** | Lucide React |
 
 ---
 
-## 🏗️ Architecture Overview
-Frontend (React + Tailwind)
-|
-| Natural Language Prompt + JWT Token
-|
-Backend (FastAPI)
-├─ Authentication Layer (JWT)
-├─ Rate Limiter
-├─ LLM Guardrails
-├─ SQL Validator
-├─ Query Builder
-├─ Explain-Before-Execute
-├─ Logger
-|
-└─ Read-Only MySQL Connection
+## 🌊 User Journey & Flow
 
+Whether you are a data analyst or a developer, getting started is easy:
 
----
+### **1. Secure Sign-In**
+- Reach the [Login Page](https://ask-your-db-gen-ai.vercel.app/login).
+- Use your credentials (Default: `admin` / `admin`).
+- Your session is secured with a time-limited JWT token.
 
-## 🚀 What Do You Want to Build?
+### **2. Connect Your Source**
+- On the **Connect Source** screen, provide your MySQL host details.
+- **Note**: Ensure your database allows public access (0.0.0.0/0 whitelist requested for Render).
+- Your credentials are encrypted locally and sent via headers; we never save your password to our repository.
 
-### 🤖 Ask Your Database
-Create a secure AI assistant that allows users to query databases using plain English.
+### **3. Ask Questions**
+- Type your query in plain English (e.g., *"Show me all users who signed up last week"*).
+- Watch the **AI Scanner** animation as it analyzes your schema and writes the SQL for you.
 
-- Ask questions instead of writing SQL
-- Preview generated SQL before execution
-- Execute safely with guardrails
-- View structured results in a modern UI
+### **4. Analyze Results**
+- Review the **Generated SQL** in the terminal-style code block.
+- Browse the data in the interactive results table.
+- Copy the SQL with one click for use in other tools.
 
 ---
 
-## ⚡ Quick Start
+## 🚀 Local Setup
 
-### Backend (FastAPI)
-
+### **Backend Setup**
 ```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # venv\Scripts\activate on Windows
 pip install -r requirements.txt
 uvicorn app:app --reload
-Frontend (React)
-bash
-Copy code
+```
+
+### **Frontend Setup**
+```bash
+cd frontend
 npm install
 npm run dev
-🔐 Security Guarantees
-✅ Only SELECT queries allowed
+```
 
-❌ No DROP, DELETE, UPDATE, INSERT, ALTER, TRUNCATE
+---
 
-❌ No multiple SQL statements
+## 🔒 Security Guarantee
+AskDB uses a **Stateless Architecture**. Your database credentials are only alive while you are using the app. We do not store your passwords in any backend database. Everything is handled via an encrypted session token stored in your browser's session storage.
 
-❌ No SELECT *
+---
 
-✅ Mandatory LIMIT enforcement
-
-✅ Read-only database users only
-
-✅ EXPLAIN executed before query runs
-
-This ensures zero risk of data corruption or data loss.
-
-📁 Project Structure
-Backend
-Copy code
-backend/
-├── app.py
-├── auth.py
-├── db.py
-├── llm.py
-├── sql_guard.py
-├── explain_guard.py
-├── rate_limit.py
-├── logger.py
-├── requirements.txt
-└── .env.example
-Frontend
-arduino
-Copy code
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── services/
-│   ├── App.jsx
-│   └── main.jsx
-├── tailwind.config.js
-└── vite.config.js
-
-🎯 Use Cases
-AI-powered internal analytics tools
-
-Developer-friendly database exploration
-
-Secure data access for non-technical teams
-
-SaaS foundations for AI analytics platforms
-
-🧠 Design Philosophy
-AI should assist, not control, your data.
-
-ask-your-db treats AI as a restricted SQL generator, not a privileged database user.
-Every guardrail exists to ensure predictability, safety, and correctness in production systems.
-
-
+*Built with ❤️ for intelligent data exploration.*
