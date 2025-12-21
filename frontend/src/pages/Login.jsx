@@ -6,8 +6,8 @@ import { Lock, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Login = () => {
-    const [username, setUsername] = useState('admin');
-    const [password, setPassword] = useState('admin');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const { login } = useAuth();
@@ -73,10 +73,6 @@ const Login = () => {
                             <ArrowRight className="w-4 h-4" />
                         </button>
                     </form>
-
-                    <div className="mt-6 text-center">
-                        <p className="text-xs text-zinc-600">Demo Account: admin / admin</p>
-                    </div>
                 </div>
             </motion.div>
         </div>

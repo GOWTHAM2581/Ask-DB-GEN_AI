@@ -66,6 +66,65 @@ const Query = () => {
                         </div>
                     )}
 
+                    {/* LOADING STATE - Modern AI Scanner */}
+                    <AnimatePresence>
+                        {isLoading && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                className="flex flex-col items-center justify-center mt-20 p-12 relative"
+                            >
+                                {/* Central Pulsing Orb */}
+                                <div className="relative">
+                                    <motion.div
+                                        animate={{
+                                            scale: [1, 1.2, 1],
+                                            opacity: [0.3, 0.6, 0.3]
+                                        }}
+                                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                        className="absolute inset-0 bg-violet-500 rounded-full blur-3xl opacity-20"
+                                    />
+                                    <div className="w-24 h-24 bg-gradient-to-tr from-violet-600 to-fuchsia-600 rounded-3xl flex items-center justify-center shadow-2xl relative z-10">
+                                        <Sparkles className="w-12 h-12 text-white animate-pulse" />
+                                    </div>
+
+                                    {/* Scanning Beam */}
+                                    <motion.div
+                                        animate={{ top: ['0%', '100%', '0%'] }}
+                                        transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                                        className="absolute left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent z-20"
+                                    />
+                                </div>
+
+                                <div className="mt-8 text-center">
+                                    <motion.h3
+                                        animate={{ opacity: [0.5, 1, 0.5] }}
+                                        transition={{ duration: 1.5, repeat: Infinity }}
+                                        className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-500"
+                                    >
+                                        AI is thinking...
+                                    </motion.h3>
+                                    <p className="text-zinc-500 text-sm mt-2 font-mono">
+                                        Analyzing schema & generating SQL
+                                    </p>
+                                </div>
+
+                                {/* Dynamic Loading Bars */}
+                                <div className="flex gap-1 mt-6">
+                                    {[0, 1, 2, 3].map((i) => (
+                                        <motion.div
+                                            key={i}
+                                            animate={{ height: [4, 16, 4] }}
+                                            transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.1 }}
+                                            className="w-1 bg-violet-500/50 rounded-full"
+                                        />
+                                    ))}
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
                     {/* ERROR */}
                     <AnimatePresence>
                         {error && (

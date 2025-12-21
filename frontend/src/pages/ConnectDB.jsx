@@ -7,11 +7,11 @@ import { motion } from 'framer-motion';
 
 const ConnectDB = () => {
     const [formData, setFormData] = useState({
-        host: import.meta.env.VITE_DB_HOST || '',
-        port: import.meta.env.VITE_DB_PORT || 3306,
-        user: import.meta.env.VITE_DB_USER || '',
-        password: import.meta.env.VITE_DB_PASSWORD || '',
-        database: import.meta.env.VITE_DB_NAME || ''
+        host: '',
+        port: '',
+        user: '',
+        password: '',
+        database: ''
     });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
