@@ -2,8 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Shield, Zap, Lock, Code2 } from 'lucide-react';
+import { useUser } from '@clerk/clerk-react';
 
 const Landing = () => {
+    const { isSignedIn } = useUser();
+
     return (
         <div className="flex flex-col items-center justify-center flex-grow relative overflow-hidden">
 
@@ -44,12 +47,14 @@ const Landing = () => {
                             Start Querying
                             <ArrowRight className="w-5 h-5" />
                         </Link>
-                        <Link
-                            to="/login"
-                            className="px-8 py-4 bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800 rounded-full font-bold text-lg transition-all"
-                        >
-                            Login
-                        </Link>
+                        {!isSignedIn && (
+                            <Link
+                                to="/login"
+                                className="px-8 py-4 bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800 rounded-full font-bold text-lg transition-all"
+                            >
+                                Login
+                            </Link>
+                        )}
                     </div>
                 </motion.div>
 

@@ -1,17 +1,19 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useUser, SignOutButton } from '@clerk/clerk-react';
 import { useAuth } from '../context/AuthContext';
 import { Database, LogOut, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Layout = ({ children }) => {
-    const { user, logout } = useAuth();
+    const { isSignedIn } = useUser();
+    const { clearDbSession } = useAuth();
     const navigate = useNavigate();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const handleLogout = () => {
-        logout();
+    const handleSignOut = () => {
+        clearDbSession();
         navigate('/login');
     };
 
@@ -35,19 +37,18 @@ const Layout = ({ children }) => {
 
                         {/* Desktop Menu */}
                         <div className="hidden md:flex items-center gap-6">
-                            {user ? (
+                            {isSignedIn ? (
                                 <>
                                     <Link to="/query" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
                                         Playground
                                     </Link>
                                     <div className="w-[1px] h-4 bg-white/10" />
-                                    <button
-                                        onClick={handleLogout}
-                                        className="text-sm font-medium text-red-400 hover:text-red-300 transition-colors flex items-center gap-2"
-                                    >
-                                        <LogOut className="w-4 h-4" />
-                                        Logout
-                                    </button>
+                                    <SignOutButton signOutCallback={handleSignOut}>
+                                        <button className="text-sm font-medium text-red-400 hover:text-red-300 transition-colors flex items-center gap-2">
+                                            <LogOut className="w-4 h-4" />
+                                            Logout
+                                        </button>
+                                    </SignOutButton>
                                 </>
                             ) : (
                                 <Link
@@ -71,7 +72,7 @@ const Layout = ({ children }) => {
             </nav>
 
             {/* Main Content */}
-            <main className="flex-grow flex flex-col pt-24 px-4 md:px-0">
+            <main className="flex-grow flex flex-col pt-24">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={children.type.name}
@@ -79,7 +80,7 @@ const Layout = ({ children }) => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.3 }}
-                        className="flex flex-col flex-grow h-full"
+                        className="flex flex-col flex-grow h-full w-full"
                     >
                         {children}
                     </motion.div>

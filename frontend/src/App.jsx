@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Layout from './components/Layout';
 import Landing from './pages/Landing';
@@ -10,8 +11,13 @@ import NotFound from './pages/NotFound';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
-    const { user } = useAuth();
-    if (!user) {
+    const { isSignedIn, isLoaded } = useUser();
+
+    if (!isLoaded) {
+        return <div className="flex-grow flex items-center justify-center">Loading...</div>;
+    }
+
+    if (!isSignedIn) {
         return <Navigate to="/login" replace />;
     }
     return children;
@@ -34,6 +40,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Landing />} />
                         <Route path="/login" element={<Login />} />
+                        <Route path="/login/sso-callback" element={<Login />} />
 
                         <Route
                             path="/connect"

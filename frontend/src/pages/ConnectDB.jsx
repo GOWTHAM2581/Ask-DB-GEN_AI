@@ -7,11 +7,11 @@ import { motion } from 'framer-motion';
 
 const ConnectDB = () => {
     const [formData, setFormData] = useState({
-        host: 'mysql-36e55b8c-gowtham2581h-2c75.k.aivencloud.com',
-        port: 17162,
+        host: '',
+        port: '',
         user: '',
         password: '',
-        database: 'defaultdb'
+        database: ''
     });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -97,7 +97,8 @@ const ConnectDB = () => {
                                             value={formData.host}
                                             onChange={handleChange}
                                             className="w-full glass-input rounded-xl px-4 py-2.5 pl-10 text-sm outline-none"
-                                            placeholder="localhost"
+                                            placeholder="db.example.com"
+                                            required
                                         />
                                     </div>
                                 </div>
@@ -111,6 +112,7 @@ const ConnectDB = () => {
                                         onChange={handleChange}
                                         className="w-full glass-input rounded-xl px-4 py-2.5 text-sm outline-none text-center"
                                         placeholder="3306"
+                                        required
                                     />
                                 </div>
                             </div>
@@ -122,7 +124,8 @@ const ConnectDB = () => {
                                     value={formData.database}
                                     onChange={handleChange}
                                     className="w-full glass-input rounded-xl px-4 py-2.5 text-sm outline-none"
-                                    placeholder="e.g. ecommerce_db"
+                                    placeholder="production_db"
+                                    required
                                 />
                             </div>
 
@@ -134,7 +137,8 @@ const ConnectDB = () => {
                                         value={formData.user}
                                         onChange={handleChange}
                                         className="w-full glass-input rounded-xl px-4 py-2.5 text-sm outline-none"
-                                        placeholder="readonly"
+                                        placeholder="admin_user"
+                                        required
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -147,7 +151,8 @@ const ConnectDB = () => {
                                             value={formData.password}
                                             onChange={handleChange}
                                             className="w-full glass-input rounded-xl px-4 py-2.5 pl-10 text-sm outline-none"
-                                            placeholder="••••••"
+                                            placeholder="••••••••••••"
+                                            required
                                         />
                                     </div>
                                 </div>

@@ -18,7 +18,7 @@
 }
 
 .glass-input {
-    @apply bg-black/20 border border-white/10 text-white placeholder:text-zinc-500 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all duration-300;
+    @apply bg-black/20 border border-white/10 text-zinc-100 placeholder:text-zinc-600 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 transition-all duration-300;
 }
 
 /* Custom Scrollbar */

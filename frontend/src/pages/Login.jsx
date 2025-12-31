@@ -1,83 +1,59 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { login as apiLogin } from '../services/api';
-import { Lock, ArrowRight } from 'lucide-react';
+import { SignIn, useUser } from '@clerk/clerk-react';
 import { motion } from 'framer-motion';
 
 const Login = () => {
-    const [username, setUsername] = useState('admin');
-    const [password, setPassword] = useState('admin');
-    const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const { login } = useAuth();
+    const { isSignedIn } = useUser();
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setIsLoading(true);
-        try {
-            const data = await apiLogin(username, password);
-            login(data.access_token);
+    useEffect(() => {
+        if (isSignedIn) {
             navigate('/connect');
-        } catch (err) {
-            setError('Invalid credentials.');
-        } finally {
-            setIsLoading(false);
         }
-    };
+    }, [isSignedIn, navigate]);
 
     return (
         <div className="flex-grow flex items-center justify-center p-4">
             <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="w-full max-w-sm"
+                className="w-full max-w-md"
             >
-                <div className="glass-panel p-8 rounded-3xl relative overflow-hidden">
-
-                    <div className="text-center mb-8">
-                        <h2 className="text-2xl font-bold">Welcome back</h2>
-                        <p className="text-zinc-500 text-sm mt-1">Please sign in to continue</p>
-                    </div>
-
-                    {error && <div className="text-red-400 text-center text-sm mb-4 bg-red-500/10 py-2 rounded-lg">{error}</div>}
-
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <input
-                                type="text"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                className="w-full glass-input rounded-xl px-4 py-3 text-sm outline-none"
-                                placeholder="Username"
-                            />
-                        </div>
-                        <div>
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full glass-input rounded-xl px-4 py-3 text-sm outline-none"
-                                placeholder="Password"
-                            />
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="w-full bg-white text-zinc-950 font-bold py-3 rounded-xl hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2 mt-2"
-                        >
-                            {isLoading ? 'Signing In...' : 'Sign In'}
-                            <ArrowRight className="w-4 h-4" />
-                        </button>
-                    </form>
-
-                    <div className="mt-6 text-center">
-                        <p className="text-xs text-zinc-600">Demo Account: admin / admin</p>
-                    </div>
-                </div>
+                <SignIn
+                    appearance={{
+                        elements: {
+                            rootBox: "w-full",
+                            card: "glass-panel rounded-3xl shadow-2xl border border-white/10",
+                            headerTitle: "text-2xl font-bold text-white",
+                            headerSubtitle: "text-zinc-400 text-sm",
+                            socialButtonsBlockButton: "bg-black/20 border border-white/10 text-white hover:bg-white/10 transition-all duration-300 rounded-xl",
+                            socialButtonsBlockButtonText: "text-white font-medium",
+                            formButtonPrimary: "bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-medium rounded-xl shadow-lg shadow-violet-500/25 transition-all",
+                            formFieldInput: "bg-black/20 border border-white/10 text-zinc-100 placeholder:text-zinc-600 focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 transition-all duration-300 rounded-xl",
+                            formFieldLabel: "text-zinc-400 font-medium text-xs",
+                            footerActionLink: "text-violet-400 hover:text-violet-300 font-medium",
+                            footerActionText: "text-zinc-500",
+                            identityPreviewText: "text-white",
+                            identityPreviewEditButton: "text-violet-400 hover:text-violet-300",
+                            formHeaderTitle: "text-white",
+                            formHeaderSubtitle: "text-zinc-400",
+                            dividerLine: "bg-white/10",
+                            dividerText: "text-zinc-500",
+                            formFieldInputShowPasswordButton: "text-zinc-400 hover:text-white",
+                            otpCodeFieldInput: "bg-black/20 border border-white/10 text-white",
+                            formResendCodeLink: "text-violet-400 hover:text-violet-300",
+                            footer: "hidden",
+                        },
+                        layout: {
+                            socialButtonsPlacement: "top",
+                            socialButtonsVariant: "blockButton",
+                        }
+                    }}
+                    routing="path"
+                    path="/login"
+                    signUpUrl="/login"
+                />
             </motion.div>
         </div>
     );
